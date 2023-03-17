@@ -1,0 +1,2 @@
+# Para ignorar o diretório usado como volume do banco de dados
+/banco/dados/

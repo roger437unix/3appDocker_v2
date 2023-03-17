@@ -1,0 +1,43 @@
+version: '3.7'
+
+networks:
+  appnet:
+    driver: bridge
+    ipam:      
+      config:
+      - subnet: 10.0.0.0/24
+
+services:
+  banco:
+    container_name: ct-mysql
+    image: roger437linux/mymysql
+    networks:
+      - appnet
+    volumes:
+      - ./banco/dados:/var/lib/mysql    
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql    
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+
+  api:
+    container_name: ct-node
+    build: "./api"
+    networks:
+      - appnet    
+    volumes:
+      - ./api:/home/api
+    ports:
+      - "9001:9001"    
+    restart: always
+
+  web:
+    container_name: ct-php
+    image: roger437linux/myphp
+    networks:
+      - appnet     
+    volumes:
+      - ./front:/var/www/html
+    ports:
+      - "8085:80"    
+    restart: always
